@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Calculator</title>
+    <!-- Importing a Sci-Fi font -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --dark-bg: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --border-glow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            /* Sci-fi grid background */
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Orbitron', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--neon-blue);
+        }
+
+        .calculator {
+            width: 320px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 243, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative top bar */
+        .calculator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        #display {
+            width: 100%;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            border-bottom: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: right;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--neon-blue);
+            outline: none;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        button {
+            height: 60px;
+            border: 1px solid rgba(0, 243, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            text-shadow: 0 0 8px #fff;
+        }
+
+        button:active {
+            transform: scale(0.95);
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 25px var(--neon-blue);
+        }
+
+        /* Specific styles for operators */
+        .operator {
+            color: var(--neon-pink);
+            border-color: rgba(188, 19, 254, 0.3);
+        }
+
+        .operator:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+        }
+
+        /* Specific styles for Clear and Equals */
+        .span-two {
+            grid-column: span 2;
+        }
+
+        .clear {
+            color: #ff3333;
+            border-color: rgba(255, 51, 51, 0.3);
+        }
+        
+        .clear:hover {
+            border-color: #ff3333;
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
+        }
+
+        .equal {
+            background: linear-gradient(45deg, rgba(0, 243, 255, 0.2), rgba(188, 19, 254, 0.2));
+            border: 1px solid var(--neon-blue);
+        }
+
+        .equal:hover {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+        <div class="buttons-grid">
+            <button class="clear span-two" onclick="clearDisplay()">CLEAR</button>
+            <button class="operator" onclick="deleteChar()">DEL</button>
+            <button class="operator" onclick="appendOperator('/')">/</button>
+            
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="operator" onclick="appendOperator('*')">×</button>
+            
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="operator" onclick="appendOperator('-')">-</button>
+            
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button class="operator" onclick="appendOperator('+')">+</button>
+            
+            <button onclick="appendNumber('.')">.</button>
+            <button onclick="appendNumber('0')">0</button>
+            <button class="equal span-two" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        // Sound effect function (Optional: creates a tiny synth beep)
+        function playSound(freq = 600, type = 'sine') {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                
+                gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.1);
+            } catch(e) {
+                // Ignore audio errors
+            }
+        }
+
+        function appendNumber(number) {
+            display.value += number;
+            playSound(800, 'sine');
+        }
+
+        function appendOperator(operator) {
+            const lastChar = display.value.slice(-1);
+            // Prevent double operators
+            if (['+', '-', '*', '/'].includes(lastChar)) return;
+            display.value += operator;
+            playSound(600, 'square');
+        }
+
+        function clearDisplay() {
+            display.value = '';
+            playSound(400, 'triangle');
+        }
+
+        function deleteChar() {
+            display.value = display.value.toString().slice(0, -1);
+            playSound(500, 'sine');
+        }
+
+        function calculate() {
+            try {
+                // Warning: eval is used here for simplicity in this specific demo context.
+                // In a production app, use a proper parser.
+                if(display.value === '') return;
+                display.value = eval(display.value);
+                playSound(1000, 'sine');
+            } catch (error) {
+                display.value = 'ERR';
+                setTimeout(() => display.value = '', 1000);
+            }
+        }
+    </script>
+</body>
+</html>
